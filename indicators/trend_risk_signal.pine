@@ -1,0 +1,37 @@
+//@version=5
+indicator("Trend Risk Signal Prototype", overlay=true)
+
+fastLength = input.int(21, "Fast EMA Length", minval=1)
+slowLength = input.int(55, "Slow EMA Length", minval=1)
+rsiLength = input.int(14, "RSI Length", minval=1)
+atrLength = input.int(14, "ATR Length", minval=1)
+atrMultiplier = input.float(1.5, "ATR Stop Multiplier", minval=0.1, step=0.1)
+
+fastEma = ta.ema(close, fastLength)
+slowEma = ta.ema(close, slowLength)
+rsi = ta.rsi(close, rsiLength)
+atr = ta.atr(atrLength)
+
+trendUp = fastEma > slowEma
+trendDown = fastEma < slowEma
+momentumUp = rsi > 55
+momentumDown = rsi < 45
+
+longSignal = trendUp and momentumUp and ta.crossover(fastEma, slowEma)
+shortSignal = trendDown and momentumDown and ta.crossunder(fastEma, slowEma)
+
+longStop = close - (atr * atrMultiplier)
+shortStop = close + (atr * atrMultiplier)
+
+plot(fastEma, "Fast EMA", color=color.new(color.teal, 0))
+plot(slowEma, "Slow EMA", color=color.new(color.orange, 0))
+
+plotshape(longSignal, title="Long Setup", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="LONG")
+plotshape(shortSignal, title="Short Setup", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="SHORT")
+
+plot(longSignal ? longStop : na, "Long ATR Stop", color=color.new(color.green, 20), style=plot.style_linebr)
+plot(shortSignal ? shortStop : na, "Short ATR Stop", color=color.new(color.red, 20), style=plot.style_linebr)
+
+alertcondition(longSignal, title="Long setup", message="Trend Risk Signal Prototype: long setup detected")
+alertcondition(shortSignal, title="Short setup", message="Trend Risk Signal Prototype: short setup detected")
+

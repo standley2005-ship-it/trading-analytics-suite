@@ -1,0 +1,3 @@
+date,symbol,setup,entry,stop,target,result,notes
+2026-01-01,EXAMPLE,trend-confirmation,100.00,97.50,105.00,not_taken,Sample row for structure only
+

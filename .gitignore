@@ -1,0 +1,13 @@
+# Local files
+.env
+*.log
+
+# Spreadsheet temp files
+~$*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
